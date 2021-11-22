@@ -41,6 +41,7 @@ public class User {
         this.favorite = null;
         this.ratedMovies = null;
         this.ratedShows = null;
+        this.nrRatings = Integer.valueOf(0);
     }
 
 
@@ -51,6 +52,7 @@ public class User {
         this.favorite = favorite;
         this.ratedMovies = new HashMap<Movie, Double>();
         this.ratedShows = new HashMap<>();
+        this.nrRatings = Integer.valueOf(0);
     }
 
     public String getUsername() {
@@ -122,6 +124,9 @@ public class User {
         // Second case => the movie should not be already rated
         if (this.ratedMovies.get(specificMovie) == null) {
             this.ratedMovies.put(specificMovie, rating);
+            this.nrRatings++;
+
+            specificMovie.addRating(rating);
             return  "success -> " + specificMovie.getTitle() + " was rated with "
                     + rating + " by " + this.username;
         }
@@ -137,13 +142,28 @@ public class User {
             return "error -> " + specificSerial.getTitle() + " is not seen";
         }
 
-        // Second case => the seasonNumber has not been already rated
-        if (this.ratedShows.get(specificSerial) == null) {
-            // first position is the seasonNumber than his rating
-            HashMap<Integer, Double> entry = new HashMap<>();
-            entry.put(seasonNumber, rating);
+        // Second case => the specificSerial has not been rated or seasonNumber has not been already rated
+        if (this.ratedShows.get(specificSerial) == null || this.ratedShows.get(specificSerial).get(seasonNumber) == null) {
+
+            // Serialul nu a primit niciun rating pana acum => noua intrare in hasmap
+            HashMap<Integer, Double> entry;
+            if (this.ratedShows.get(specificSerial) == null) {
+                entry = new HashMap<>();
+                entry.put(seasonNumber, rating);
+            } else {
+                // Serialul a mai primit rating, dar sezonul curent nu
+                entry = this.ratedShows.get(specificSerial);
+                entry.put(seasonNumber, rating);
+            }
 
             this.ratedShows.put(specificSerial, entry);
+            this.nrRatings++;
+
+            // RATE THE SEASON => every serial has a list of sesons, every season has a list of ratings
+            List <Double> ratings = specificSerial.getAllSeasons().get(seasonNumber - 1).getRatings();
+            ratings.add(rating);
+            specificSerial.getAllSeasons().get(seasonNumber - 1).setRatings(ratings);
+
             return "success -> " + specificSerial.getTitle() + " was rated with "
                     + rating + " by " + this.username;
         }

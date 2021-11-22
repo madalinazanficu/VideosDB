@@ -11,19 +11,22 @@ public class Video {
     private Integer productionYear;
     // every video has a cast of actors
     private ArrayList<String> cast;
+    // every video has an average rating
+    public Double averageRating;
 
     public Video() {
         this.title = null;
         this.genres = null;
         this.productionYear = null;
         this.cast = null;
-
+        this.averageRating = 0.0;
     }
     public Video(String title, ArrayList<String> genres, Integer productionYear, ArrayList<String> cast) {
         this.title = title;
         this.genres = genres;
         this.productionYear = productionYear;
         this.cast = cast;
+        this.averageRating = 0.0;
     }
 
     // getters for every attribute
@@ -43,6 +46,10 @@ public class Video {
         return cast;
     }
 
+    public Double getAverageRating() {
+        return this.averageRating;
+    }
+
     // setters for every attribute
     public void setTitle(String title) {
         this.title = title;
@@ -60,6 +67,7 @@ public class Video {
         this.cast = cast;
     }
 
+
     @Override
     public String toString() {
         return "Video{" +
@@ -67,5 +75,10 @@ public class Video {
                 ", genre=" + genres +
                 ", productionYear=" + productionYear +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

@@ -46,4 +46,8 @@ public class UsersDB {
        // user not found
        return null;
     }
+    public void clearUsersDB() {
+        instance = null;
+        this.allUsers.clear();
+    }
 }

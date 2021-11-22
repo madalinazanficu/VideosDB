@@ -110,4 +110,10 @@ public class VideosDB {
         // movie not found
         return null;
     }
+    public void clearVideosDB() {
+        instance = null;
+        this.allMovies.clear();
+        this.allVideos.clear();
+        this.allSeries.clear();
+    }
 }

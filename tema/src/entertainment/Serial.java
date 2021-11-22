@@ -11,14 +11,11 @@ public class Serial extends Video {
     // the list of seasons
     private List<Season> allSeasons;
 
-    // list of average rating of all seasons for the Show
-   // private List<Double> averageRating;
 
     public Serial (String title, ArrayList<String> genres, Integer productionYear, List<Season> allSeasons, Integer numberofSeasons, ArrayList<String> cast) {
         super(title, genres, productionYear, cast);
         this.allSeasons = allSeasons;
         this.numberofSeasons = numberofSeasons;
-        // this.averageRating = new ArrayList<Double>();
     }
 
     // getters for all attributes
@@ -28,5 +25,27 @@ public class Serial extends Video {
 
     public Integer getNumberofSeasons() {
         return numberofSeasons;
+    }
+
+    public void computeAverageRating() {
+        Double totalSum = 0.0;
+
+        // every serial has a list of seasons => iterate to compute the average
+        for (Season season : allSeasons) {
+            Double sum = 0.0;
+            int nr = 0;
+            // every season has a list of ratings from all the users
+            for (Double rating : season.getRatings()) {
+                sum += rating;
+                nr += 1;
+            }
+            if (nr != 0) {
+                totalSum += sum / nr;
+            }
+        }
+        if (totalSum != 0)
+            this.averageRating = totalSum / this.numberofSeasons;
+        else
+            this.averageRating = 0.0;
     }
 }

@@ -1,13 +1,14 @@
 package main;
 
 import actions.Commands;
-import actions.HelperWrite;
+import actions.Queries;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
 import databases.ActorsDB;
 import databases.UsersDB;
 import databases.VideosDB;
+import entities.Actor;
 import fileio.ActionInputData;
 import fileio.Input;
 import fileio.InputLoader;
@@ -82,6 +83,10 @@ public final class Main {
 
 
         // keep the input information in databases for every objectType
+        UsersDB.getInstance().clearUsersDB();
+        ActorsDB.getInstance().clearActorDB();
+        VideosDB.getInstance().clearVideosDB();
+
         UsersDB users = UsersDB.getInstance();
         ActorsDB actors = ActorsDB.getInstance();
         VideosDB videos = VideosDB.getInstance();
@@ -115,12 +120,16 @@ public final class Main {
 //                // used Reccommandation class to make different reccomandations
 //
 //            }
-//            if (action.getActionType().equals("query")) {
-//                // getObjectType => object to apply criteria
-//                // getCritestia => apply specified criteria
-//                // used Query class to make manipulate queries
-//
-//            }
+            if (action.getActionType().equals("query")) {
+                // getObjectType => object to apply criteria
+                // getCritestia => apply specified criteria
+                // used Query class to make manipulate queries
+                Queries query = new Queries();
+                String outputMessage = query.executeQuery(action);
+                JSONObject result = fileWriter.writeFile(action.getActionId(), "", outputMessage);
+                arrayResult.add(result);
+
+            }
         }
 
         fileWriter.closeJSON(arrayResult);

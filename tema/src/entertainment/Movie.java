@@ -21,4 +21,27 @@ public class Movie extends Video {
         return this.duration;
     }
 
+    // add rating from a user
+    public void addRating(Double rating) {
+        this.ratings.add(rating);
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    // compute the average rating
+    public void computeAverageRating() {
+        Double sum = 0.0;
+        int num = 0;
+        for (Double rating : ratings) {
+            sum += rating;
+            num += 1;
+        }
+        if (num != 0)
+            this.averageRating = sum / num;
+        else
+            this.averageRating = 0.0;
+    }
+
 }
