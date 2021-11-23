@@ -1,18 +1,27 @@
 package main;
 
+import actions.Commands;
+import actions.Queries;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
+import databases.ActorsDB;
+import databases.UsersDB;
+import databases.VideosDB;
+import entities.Actor;
+import fileio.ActionInputData;
 import fileio.Input;
 import fileio.InputLoader;
 import fileio.Writer;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -71,6 +80,57 @@ public final class Main {
         JSONArray arrayResult = new JSONArray();
 
         //TODO add here the entry point to your implementation
+
+
+        // keep the input information in databases for every objectType
+        UsersDB.getInstance().clearUsersDB();
+        ActorsDB.getInstance().clearActorDB();
+        VideosDB.getInstance().clearVideosDB();
+
+        UsersDB users = UsersDB.getInstance();
+        ActorsDB actors = ActorsDB.getInstance();
+        VideosDB videos = VideosDB.getInstance();
+
+        // the list of videos will be updated as well
+        VideosDB.getInstance().setAllShows(input);
+        VideosDB.getInstance().setAllMovies(input);
+
+        // to set my databases information
+        UsersDB.getInstance().setUsersDB(input);
+        ActorsDB.getInstance().SetActorsDB(input);
+
+        // actions required
+        List<ActionInputData> actions = input.getCommands();
+
+        for (ActionInputData action : actions) {
+            // getActionType => command / reccomandations / query
+
+            if (action.getActionType().equals("command")) {
+                // getType => favorite/ view / rating
+                // used Command class to make different commands
+
+                Commands commands = new Commands();
+                String outputMessage = commands.executeCommand(action);
+                JSONObject result = fileWriter.writeFile(action.getActionId(), "", outputMessage);
+                arrayResult.add(result);
+
+            }
+//            if (action.getActionType().equals("reccommandation")) {
+//                // getType => standard, best_unseen, search, favorite, popular
+//                // used Reccommandation class to make different reccomandations
+//
+//            }
+            if (action.getActionType().equals("query")) {
+                // getObjectType => object to apply criteria
+                // getCritestia => apply specified criteria
+                // used Query class to make manipulate queries
+                Queries query = new Queries();
+                String outputMessage = query.executeQuery(action);
+                JSONObject result = fileWriter.writeFile(action.getActionId(), "", outputMessage);
+                arrayResult.add(result);
+
+            }
+        }
 
         fileWriter.closeJSON(arrayResult);
     }
