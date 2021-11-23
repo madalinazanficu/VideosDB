@@ -9,20 +9,26 @@ import java.util.Collection;
 import java.util.List;
 
 import static actions.QueriesActor.executeQueryforActors;
+import static actions.QueriesMovie.executeQueryforMovie;
+import static actions.QueriesSerial.executeQueryforSerial;
+import static actions.QueriesUser.executeQueryforUser;
 
 public class Queries {
-    public String executeQuery(ActionInputData query) {
+    public static String executeQuery(ActionInputData query) {
         // 3 types of objects => actors / movies / users
         if (query.getObjectType().equals("actors")) {
             return executeQueryforActors(query);
         }
-        if(query.getObjectType().equals("movies")) {
-            return "Query result: []";
+        if (query.getObjectType().equals("movies")) {
+            return executeQueryforMovie(query);
+        }
+        if (query.getObjectType().equals("shows")) {
+            return executeQueryforSerial(query);
         }
         if(query.getObjectType().equals("users")) {
-            return "Query result: []";
+            return executeQueryforUser(query);
         }
         return "Query result: []";
-
     }
+
 }

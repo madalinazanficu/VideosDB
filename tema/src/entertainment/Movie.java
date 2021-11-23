@@ -16,6 +16,19 @@ public class Movie extends Video {
         this.ratings = new ArrayList<Double>();
     }
 
+    public Movie(String title, ArrayList<String> genres, Integer productionYear, Integer duration, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite) {
+        super(title, genres, productionYear, cast, averageRating, numberViews, numberFavorite);
+        this.duration = duration;
+        this.ratings = new ArrayList<Double>();
+    }
+    // copy-constructor
+    public Movie(Movie assign) {
+        super(assign.getTitle(), assign.getGenre(), assign.getProductionYear(), assign.getCast(), assign.getAverageRating(), assign.getNumberViews(), assign.getNumberFavorite());
+        this.duration = assign.getDuration();
+        this.ratings = new ArrayList<>();
+
+    }
+
     // getters for all atributes
     public Integer getTime() {
         return this.duration;

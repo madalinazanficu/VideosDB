@@ -13,6 +13,10 @@ public class Video {
     private ArrayList<String> cast;
     // every video has an average rating
     public Double averageRating;
+    // every video has a number of views
+    public Integer numberViews;
+    // every video has a number of users that add it at favorite
+    public Integer numberFavorite;
 
     public Video() {
         this.title = null;
@@ -20,6 +24,8 @@ public class Video {
         this.productionYear = null;
         this.cast = null;
         this.averageRating = 0.0;
+        this.numberViews = 0;
+        this.numberFavorite = 0;
     }
     public Video(String title, ArrayList<String> genres, Integer productionYear, ArrayList<String> cast) {
         this.title = title;
@@ -27,6 +33,18 @@ public class Video {
         this.productionYear = productionYear;
         this.cast = cast;
         this.averageRating = 0.0;
+        this.numberViews = 0;
+        this.numberFavorite = 0;
+    }
+
+    public Video(String title, ArrayList<String> genres, Integer productionYear, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite) {
+        this.title = title;
+        this.genres = genres;
+        this.productionYear = productionYear;
+        this.cast = cast;
+        this.averageRating = averageRating;
+        this.numberViews = numberViews;
+        this.numberFavorite = numberFavorite;
     }
 
     // getters for every attribute
@@ -50,6 +68,10 @@ public class Video {
         return this.averageRating;
     }
 
+    public Integer getNumberViews() {return this.numberViews;}
+
+    public Integer getNumberFavorite() {return this.numberFavorite;}
+
     // setters for every attribute
     public void setTitle(String title) {
         this.title = title;
@@ -67,6 +89,14 @@ public class Video {
         this.cast = cast;
     }
 
+    // increment the number of views
+    public void incrementViews(Integer numberViews) {
+        this.numberViews += numberViews;
+    }
+    // increment the number of favorite
+    public void incrementFavorite(Integer numberFavorite) {
+        this.numberFavorite += numberFavorite;
+    }
 
     @Override
     public String toString() {

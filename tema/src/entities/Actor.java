@@ -120,7 +120,7 @@ public class Actor {
             // make every keyWord lowerCse
             String lKeyWord = keyWord.toLowerCase(Locale.ROOT);
 
-            if (!this.careerDescription.contains(lKeyWord)) {
+            if (!lCareerDescription.contains(lKeyWord)) {
                 return false;
             }
         }

@@ -22,6 +22,10 @@ public class UsersDB {
         }
         return instance;
     }
+    public List<User> getAllUsers() {
+        return this.allUsers;
+    }
+
 
     // constructor
     private UsersDB() {

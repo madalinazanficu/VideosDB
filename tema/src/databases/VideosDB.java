@@ -3,11 +3,9 @@ package databases;
 import entertainment.Movie;
 import entertainment.Serial;
 import entertainment.Video;
-import fileio.Input;
-import fileio.MovieInputData;
-import fileio.SerialInputData;
-import fileio.ShowInput;
+import fileio.*;
 
+import javax.swing.text.StyledEditorKit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.List;
@@ -39,6 +37,9 @@ public class VideosDB {
         this.allVideos = new ArrayList<Video>();
         this.allMovies = new ArrayList<Movie>();
         this.allSeries = new ArrayList<Serial>();
+    }
+    public void show() {
+        System.out.println(allMovies);
     }
 
     // bring information for movies from input
@@ -87,9 +88,9 @@ public class VideosDB {
 
     public Video getSpecificVideo(String videoName) {
         for (Video video : allVideos)
-            if (video.getTitle().equals(videoName))
+            if (video.getTitle().equals(videoName)) {
                 return video;
-
+            }
         // video not found
         return null;
     }
@@ -110,6 +111,66 @@ public class VideosDB {
         // movie not found
         return null;
     }
+
+
+    // filter the list of movies after specific criteria year/genre to use it in QueryMovie
+    public List<Movie> getFilteredMovies(ActionInputData query) {
+
+        List <Movie> filteredMovies = new ArrayList<>();
+
+        // filters criterias
+        List<String> year = query.getFilters().get(0);
+        List<String> genre = query.getFilters().get(1);
+
+        for (Movie movie : this.allMovies) {
+            boolean yearCheck = true;
+            boolean genreCheck = true;
+
+            if (year != null && year.get(0) != null) {
+                Integer yearRequired = Integer.valueOf(year.get(0));
+                yearCheck = movie.getProductionYear().equals(yearRequired);
+            }
+            if (genre != null && genre.get(0) != null) {
+                genreCheck = movie.getGenre().containsAll(genre);
+            }
+            if (yearCheck && genreCheck) {
+                Movie copyMovie = new Movie(movie.getTitle(), movie.getGenre(), movie.getProductionYear(), movie.getDuration(), movie.getCast(), movie.getAverageRating(), movie.getNumberViews(), movie.getNumberFavorite());
+                // Movie copyMovie = new Movie(movie);
+                filteredMovies.add(copyMovie);
+            }
+        }
+        return filteredMovies;
+    }
+
+    // filter the list of series after specific criteria year/genre to use it in QuerySerial
+    public List<Serial> getFilteredSeries(ActionInputData query) {
+        List <Serial> filteredSeries = new ArrayList<>();
+
+        // filters criteria
+        List<String> year = query.getFilters().get(0);
+        List<String> genre = query.getFilters().get(1);
+
+        for (Serial serial : this.allSeries) {
+            boolean yearCheck = true;
+            boolean genreCheck = true;
+
+            if (year != null && year.get(0) != null) {
+                Integer yearRequired = Integer.valueOf(year.get(0));
+                yearCheck = serial.getProductionYear().equals(yearRequired);
+            }
+            if (genre != null && genre.get(0) != null) {
+                genreCheck = serial.getGenre().containsAll(genre);
+            }
+
+            if (yearCheck && genreCheck) {
+                Serial copySerial = new Serial(serial.getTitle(), serial.getGenre(), serial.getProductionYear(), serial.getAllSeasons(), serial.getNumberofSeasons(), serial.getCast(), serial.getAverageRating(), serial.getNumberViews(), serial.getNumberFavorite());
+                // Serial copySerial = new Serial(serial);
+                filteredSeries.add(copySerial);
+            }
+        }
+        return filteredSeries;
+    }
+
     public void clearVideosDB() {
         instance = null;
         this.allMovies.clear();

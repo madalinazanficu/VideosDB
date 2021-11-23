@@ -1,13 +1,12 @@
 package entities;
 
+import actor.ActorsAwards;
+import databases.VideosDB;
 import entertainment.Movie;
 import entertainment.Serial;
 import entertainment.Video;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class User {
     private String username;
@@ -49,10 +48,23 @@ public class User {
         this.username = username;
         this.subscription = subscription;
         this.history = history;
+        incrementViewsUser(history);
         this.favorite = favorite;
+        incrementFavoriteUser(favorite);
         this.ratedMovies = new HashMap<Movie, Double>();
         this.ratedShows = new HashMap<>();
         this.nrRatings = Integer.valueOf(0);
+    }
+    public User(String username, String subscription, Map<String, Integer> history, List<String> favorite, Integer nrRatings) {
+        this.username = username;
+        this.subscription = subscription;
+        this.history = history;
+        incrementViewsUser(history);
+        this.favorite = favorite;
+        incrementFavoriteUser(favorite);
+        this.ratedMovies = new HashMap<Movie, Double>();
+        this.ratedShows = new HashMap<>();
+        this.nrRatings = nrRatings;
     }
 
     public String getUsername() {
@@ -69,6 +81,42 @@ public class User {
 
     public List<String> getFavorite() {
         return favorite;
+    }
+
+    public Integer getNrRatings() {
+        return this.nrRatings;
+    }
+
+
+    // increment the number of views for each video from an user history (given directly from input)
+    public void incrementViewsUser(Map<String, Integer> history) {
+        // iterate in user's history
+        Iterator<Map.Entry<String, Integer>> iterator = history.entrySet().iterator();
+
+        while(iterator.hasNext()) {
+            Map.Entry<String, Integer> entry = iterator.next();
+
+            // every video from history is the key from history map
+            Video specificVideo = VideosDB.getInstance().getSpecificVideo(entry.getKey());
+
+            // if that video is valid (movie or serial) increment the views of that video
+            if (specificVideo != null)
+                specificVideo.incrementViews(entry.getValue());
+        }
+    }
+
+    // increment the number of likes for each video from an user favorite list (given directly from input)
+    public void incrementFavoriteUser(List<String> favorite) {
+
+        // iterate in user's favorite list
+        for (String fav : favorite) {
+            Video specificVideo = VideosDB.getInstance().getSpecificVideo(fav);
+
+            // for every valid video increment the favorite number of that video
+            if (specificVideo != null) {
+                    specificVideo.incrementFavorite(1);
+            }
+        }
     }
 
     public String getFavoriteByName(String searchFavorite) {
@@ -95,6 +143,10 @@ public class User {
         this.favorite.add(newFavoriteVideo);
         output = "success -> " + newFavoriteVideo + " was added as favourite";
 
+        // increment the number of users that add this video at favorite
+        Video specificVideo = VideosDB.getInstance().getSpecificVideo(newFavoriteVideo);
+        specificVideo.incrementFavorite(1);
+
         // return it in Commands -> favoriteCommand
         return output;
     }
@@ -110,6 +162,11 @@ public class User {
         // increment the views of the newHistoryVideo
         Integer views = this.history.get(newHistoryVideo) + 1;
         this.history.replace(newHistoryVideo, views);
+
+        // increment the number of views of the specificVideo
+        Video specificVideo = VideosDB.getInstance().getSpecificVideo(newHistoryVideo);
+        specificVideo.incrementViews(1);
+
         return "success -> " + newHistoryVideo + " was viewed with total views of "
                 + this.history.get(newHistoryVideo);
     }

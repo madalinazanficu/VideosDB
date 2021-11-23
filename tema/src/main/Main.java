@@ -91,13 +91,13 @@ public final class Main {
         ActorsDB actors = ActorsDB.getInstance();
         VideosDB videos = VideosDB.getInstance();
 
-        // to set my databases information
-        users.setUsersDB(input);
-        actors.SetActorsDB(input);
-
         // the list of videos will be updated as well
-        videos.setAllShows(input);
-        videos.setAllMovies(input);
+        VideosDB.getInstance().setAllShows(input);
+        VideosDB.getInstance().setAllMovies(input);
+
+        // to set my databases information
+        UsersDB.getInstance().setUsersDB(input);
+        ActorsDB.getInstance().SetActorsDB(input);
 
         // actions required
         List<ActionInputData> actions = input.getCommands();

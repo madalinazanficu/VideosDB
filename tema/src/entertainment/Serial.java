@@ -11,11 +11,29 @@ public class Serial extends Video {
     // the list of seasons
     private List<Season> allSeasons;
 
+    // total Duration of a serial
+    private Integer duration;
+
 
     public Serial (String title, ArrayList<String> genres, Integer productionYear, List<Season> allSeasons, Integer numberofSeasons, ArrayList<String> cast) {
         super(title, genres, productionYear, cast);
         this.allSeasons = allSeasons;
         this.numberofSeasons = numberofSeasons;
+        computeDuration();
+    }
+
+    public Serial (String title, ArrayList<String> genres, Integer productionYear, List<Season> allSeasons, Integer numberofSeasons, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite) {
+        super(title, genres, productionYear, cast, averageRating, numberViews, numberFavorite);
+        this.allSeasons = allSeasons;
+        this.numberofSeasons = numberofSeasons;
+        computeDuration();
+    }
+    // copy-constructor
+    public Serial(Serial assign) {
+        super(assign.getTitle(), assign.getGenre(), assign.getProductionYear(), assign.getCast(), assign.getAverageRating(), assign.getNumberViews(), assign.getNumberFavorite());
+        this.allSeasons = assign.allSeasons;
+        this.numberofSeasons = assign.numberofSeasons;
+        computeDuration();
     }
 
     // getters for all attributes
@@ -25,6 +43,9 @@ public class Serial extends Video {
 
     public Integer getNumberofSeasons() {
         return numberofSeasons;
+    }
+    public Integer getDuration() {
+        return this.duration;
     }
 
     public void computeAverageRating() {
@@ -48,4 +69,12 @@ public class Serial extends Video {
         else
             this.averageRating = 0.0;
     }
+    public void computeDuration() {
+        Integer duration = 0;
+        for(Season season : allSeasons) {
+            duration += season.getDuration();
+        }
+        this.duration = duration;
+    }
+
 }

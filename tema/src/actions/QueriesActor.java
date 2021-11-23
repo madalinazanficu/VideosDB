@@ -45,7 +45,7 @@ public class QueriesActor {
         List<Actor> filteredActors = ActorsDB.getInstance().sortActorsByAwards(query);
         int i;
         for (i = 0; i < filteredActors.size() - 1; i++) {
-            output = output + filteredActors.get(i) + "]";
+            output = output + filteredActors.get(i).getName() + ", ";
         }
         if (filteredActors.size() != 0)
             output = output + filteredActors.get(i).getName() + "]";
@@ -59,7 +59,7 @@ public class QueriesActor {
         List<Actor> filteredActors = ActorsDB.getInstance().sortActorsByFD(query);
         int i;
         for (i = 0; i < filteredActors.size() - 1; i++) {
-            output = output + filteredActors.get(i) + "]";
+            output = output + filteredActors.get(i).getName() + "]";
         }
         if (filteredActors.size() != 0)
             output = output + filteredActors.get(i).getName() + "]";

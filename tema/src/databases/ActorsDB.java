@@ -74,7 +74,8 @@ public class ActorsDB {
            // iterate in awards required
            Boolean exist = true;
            for (String award : awardsRequired) {
-               if (actor.getAwards().get(award) == null) {
+               ActorsAwards a = ActorsAwards.valueOf(award);
+               if (actor.getAwards().get(a) == null) {
                    exist = false;
                }
            }
