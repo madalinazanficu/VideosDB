@@ -17,6 +17,8 @@ public class Video {
     public Integer numberViews;
     // every video has a number of users that add it at favorite
     public Integer numberFavorite;
+    // every video has a index in database
+    public Integer index;
 
     public Video() {
         this.title = null;
@@ -46,6 +48,16 @@ public class Video {
         this.numberViews = numberViews;
         this.numberFavorite = numberFavorite;
     }
+    public Video(String title, ArrayList<String> genres, Integer productionYear, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite, Integer index) {
+        this.title = title;
+        this.genres = genres;
+        this.productionYear = productionYear;
+        this.cast = cast;
+        this.averageRating = averageRating;
+        this.numberViews = numberViews;
+        this.numberFavorite = numberFavorite;
+        this.index = index;
+    }
 
     // getters for every attribute
     public String getTitle() {
@@ -71,6 +83,8 @@ public class Video {
     public Integer getNumberViews() {return this.numberViews;}
 
     public Integer getNumberFavorite() {return this.numberFavorite;}
+
+    public Integer getIndex() {return this.index;}
 
     // setters for every attribute
     public void setTitle(String title) {

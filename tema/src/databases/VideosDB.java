@@ -16,6 +16,8 @@ public class VideosDB {
 
     public static VideosDB instance = null;
 
+    private Integer VideoIndex;
+
     // list for all videos both movies or series
     private List<Video> allVideos;
 
@@ -32,8 +34,10 @@ public class VideosDB {
         return instance;
     }
 
+
     // construct the database for videos
     private VideosDB() {
+        this.VideoIndex = 0;
         this.allVideos = new ArrayList<Video>();
         this.allMovies = new ArrayList<Movie>();
         this.allSeries = new ArrayList<Serial>();
@@ -42,16 +46,18 @@ public class VideosDB {
         System.out.println(allMovies);
     }
 
+
     // bring information for movies from input
     public void setAllMovies(Input input) {
         for (MovieInputData movieInput : input.getMovies()) {
-            Movie newMovie = new Movie(movieInput.getTitle(), movieInput.getGenres(), movieInput.getYear(), movieInput.getDuration(), movieInput.getCast());
+            //Movie newMovie = new Movie(movieInput.getTitle(), movieInput.getGenres(), movieInput.getYear(), movieInput.getDuration(), movieInput.getCast());
+            Movie newMovie = new Movie(movieInput.getTitle(), movieInput.getGenres(), movieInput.getYear(), movieInput.getDuration(), movieInput.getCast(), 0.0, 0, 0, VideoIndex);
 
             // add in the list of movies
             this.allMovies.add(newMovie);
 
-            // also add in the list of videos
-            this.allVideos.add(newMovie);
+            // increment the VideoIndex
+            incrementVideoIndex();
         }
 
     }
@@ -59,16 +65,35 @@ public class VideosDB {
     // bring information for shows from input
     public void setAllShows(Input input) {
         for (SerialInputData serialInput : input.getSerials()) {
-            Serial newSerial = new Serial(serialInput.getTitle(), serialInput.getGenres(), serialInput.getYear(), serialInput.getSeasons(), serialInput.getNumberSeason(), serialInput.getCast());
+
+            // Serial newSerial = new Serial(serialInput.getTitle(), serialInput.getGenres(), serialInput.getYear(), serialInput.getSeasons(), serialInput.getNumberSeason(), serialInput.getCast());
+            Serial newSerial = new Serial(serialInput.getTitle(), serialInput.getGenres(), serialInput.getYear(), serialInput.getSeasons(), serialInput.getNumberSeason(), serialInput.getCast(), 0.0, 0, 0, VideoIndex);
 
             // add in the list of series
             this.allSeries.add(newSerial);
 
-            // also add in the list of videos
-            this.allVideos.add(newSerial);
+            // increment the VideoIndex
+            incrementVideoIndex();
         }
 
     }
+    public List<Video> getAllVideos() {
+        List<Video> allVideos = new ArrayList<>();
+        for (Movie movie : allMovies) {
+            movie.computeAverageRating();
+            allVideos.add(movie);
+        }
+        for (Serial serial : allSeries) {
+            serial.computeAverageRating();
+            allVideos.add(serial);
+        }
+        return allVideos;
+    }
+
+    public void incrementVideoIndex() {
+        this.VideoIndex = this.VideoIndex + 1;
+    }
+
     // is a movie or a serial? (used in Commands)
     public String videoType(String Video) {
         // search in allMovies
@@ -87,7 +112,7 @@ public class VideosDB {
     }
 
     public Video getSpecificVideo(String videoName) {
-        for (Video video : allVideos)
+        for (Video video : getAllVideos())
             if (video.getTitle().equals(videoName)) {
                 return video;
             }
@@ -173,6 +198,7 @@ public class VideosDB {
 
     public void clearVideosDB() {
         instance = null;
+        this.VideoIndex = 0;
         this.allMovies.clear();
         this.allVideos.clear();
         this.allSeries.clear();
