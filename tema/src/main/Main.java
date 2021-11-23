@@ -2,6 +2,7 @@ package main;
 
 import actions.Commands;
 import actions.Queries;
+import actions.Recommendation;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
@@ -92,8 +93,8 @@ public final class Main {
         VideosDB videos = VideosDB.getInstance();
 
         // the list of videos will be updated as well
-        VideosDB.getInstance().setAllShows(input);
         VideosDB.getInstance().setAllMovies(input);
+        VideosDB.getInstance().setAllShows(input);
 
         // to set my databases information
         UsersDB.getInstance().setUsersDB(input);
@@ -115,11 +116,15 @@ public final class Main {
                 arrayResult.add(result);
 
             }
-//            if (action.getActionType().equals("reccommandation")) {
-//                // getType => standard, best_unseen, search, favorite, popular
-//                // used Reccommandation class to make different reccomandations
-//
-//            }
+            if (action.getActionType().equals("recommendation")) {
+                // getType => standard, best_unseen, search, favorite, popular
+                // used Reccommandation class to make different reccomandations
+                Recommendation recommendation = new Recommendation();
+                String outputMessage = recommendation.executeRecommendation(action);
+                JSONObject result = fileWriter.writeFile(action.getActionId(), "", outputMessage);
+                arrayResult.add(result);
+
+            }
             if (action.getActionType().equals("query")) {
                 // getObjectType => object to apply criteria
                 // getCritestia => apply specified criteria

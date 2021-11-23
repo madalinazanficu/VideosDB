@@ -28,13 +28,20 @@ public class Serial extends Video {
         this.numberofSeasons = numberofSeasons;
         computeDuration();
     }
-    // copy-constructor
-    public Serial(Serial assign) {
-        super(assign.getTitle(), assign.getGenre(), assign.getProductionYear(), assign.getCast(), assign.getAverageRating(), assign.getNumberViews(), assign.getNumberFavorite());
-        this.allSeasons = assign.allSeasons;
-        this.numberofSeasons = assign.numberofSeasons;
+    public Serial (String title, ArrayList<String> genres, Integer productionYear, List<Season> allSeasons, Integer numberofSeasons, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite, Integer index) {
+        super(title, genres, productionYear, cast, averageRating, numberViews, numberFavorite, index);
+        this.allSeasons = allSeasons;
+        this.numberofSeasons = numberofSeasons;
         computeDuration();
     }
+
+    // copy-constructor
+//    public Serial(Serial assign) {
+//        super(assign.getTitle(), assign.getGenre(), assign.getProductionYear(), assign.getCast(), assign.getAverageRating(), assign.getNumberViews(), assign.getNumberFavorite());
+//        this.allSeasons = assign.allSeasons;
+//        this.numberofSeasons = assign.numberofSeasons;
+//        computeDuration();
+//    }
 
     // getters for all attributes
     public List<Season> getAllSeasons() {
@@ -47,6 +54,7 @@ public class Serial extends Video {
     public Integer getDuration() {
         return this.duration;
     }
+    public Double getAverageRating() {return averageRating;}
 
     public void computeAverageRating() {
         Double totalSum = 0.0;

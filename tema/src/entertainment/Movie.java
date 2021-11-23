@@ -21,6 +21,13 @@ public class Movie extends Video {
         this.duration = duration;
         this.ratings = new ArrayList<Double>();
     }
+
+    public Movie(String title, ArrayList<String> genres, Integer productionYear, Integer duration, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite, Integer index) {
+        super(title, genres, productionYear, cast, averageRating, numberViews, numberFavorite, index);
+        this.duration = duration;
+        this.ratings = new ArrayList<Double>();
+    }
+
     // copy-constructor
     public Movie(Movie assign) {
         super(assign.getTitle(), assign.getGenre(), assign.getProductionYear(), assign.getCast(), assign.getAverageRating(), assign.getNumberViews(), assign.getNumberFavorite());
@@ -42,6 +49,8 @@ public class Movie extends Video {
     public Integer getDuration() {
         return duration;
     }
+
+    public Double getAverageRating() {return averageRating;}
 
     // compute the average rating
     public void computeAverageRating() {
