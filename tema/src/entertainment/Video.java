@@ -1,6 +1,7 @@
 package entertainment;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Video {
     // every video has a title
@@ -29,7 +30,9 @@ public class Video {
         this.numberViews = 0;
         this.numberFavorite = 0;
     }
-    public Video(String title, ArrayList<String> genres, Integer productionYear, ArrayList<String> cast) {
+    public Video(final String title, final ArrayList<String> genres, final Integer productionYear,
+                 final ArrayList<String> cast) {
+
         this.title = title;
         this.genres = genres;
         this.productionYear = productionYear;
@@ -39,7 +42,10 @@ public class Video {
         this.numberFavorite = 0;
     }
 
-    public Video(String title, ArrayList<String> genres, Integer productionYear, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite) {
+    public Video(final String title, final ArrayList<String> genres, final Integer productionYear,
+                 final ArrayList<String> cast, final Double averageRating,
+                 final Integer numberViews, final Integer numberFavorite) {
+
         this.title = title;
         this.genres = genres;
         this.productionYear = productionYear;
@@ -48,7 +54,10 @@ public class Video {
         this.numberViews = numberViews;
         this.numberFavorite = numberFavorite;
     }
-    public Video(String title, ArrayList<String> genres, Integer productionYear, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite, Integer index) {
+    public Video(final String title, final ArrayList<String> genres, final Integer productionYear,
+                 final ArrayList<String> cast, final Double averageRating,
+                 final Integer numberViews, final Integer numberFavorite, final Integer index) {
+
         this.title = title;
         this.genres = genres;
         this.productionYear = productionYear;
@@ -59,59 +68,118 @@ public class Video {
         this.index = index;
     }
 
+    // Copy Constructor
+    public Video(Video assign) {
+        this.title = assign.getTitle();
+        this.genres = assign.getGenre();
+        this.productionYear = assign.getProductionYear();
+        this.cast = assign.getCast();
+        this.averageRating = assign.getAverageRating();
+        this.numberViews = assign.getNumberViews();
+        this.numberFavorite = assign.getNumberFavorite();
+        this.index = assign.getIndex();
+
+    }
+
     // getters for every attribute
+
+    /**
+     * @return
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * @return
+     */
     public ArrayList<String> getGenre() {
         return genres;
     }
 
+    /**
+     * @return
+     */
     public Integer getProductionYear() {
         return productionYear;
     }
 
+    /**
+     * @return
+     */
     public ArrayList<String> getCast() {
         return cast;
     }
 
+    /**
+     * @return
+     */
     public Double getAverageRating() {
         return this.averageRating;
     }
 
-    public Integer getNumberViews() {return this.numberViews;}
+    /**
+     * @return
+     */
+    public Integer getNumberViews() {
+        return this.numberViews;
+    }
 
-    public Integer getNumberFavorite() {return this.numberFavorite;}
+    /**
+     * @return
+     */
+    public Integer getNumberFavorite() {
+        return this.numberFavorite;
+    }
 
-    public Integer getIndex() {return this.index;}
+    /**
+     * @return
+     */
+    public Integer getIndex() {
+        return this.index;
+    }
 
+    /**
+     * @param title
+     */
     // setters for every attribute
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
-    public void setGenre(ArrayList<String> genres) {
+    /**
+     * @param genres
+     */
+    public void setGenre(final ArrayList<String> genres) {
         this.genres = genres;
     }
 
-    public void setProductionYear(Integer productionYear) {
-        this.productionYear = productionYear;
-    }
-
-    public void setCast(ArrayList<String> cast) {
+    /**
+     * @param cast
+     */
+    public void setCast(final ArrayList<String> cast) {
         this.cast = cast;
     }
 
+    /**
+     * @param numberViews
+     */
     // increment the number of views
-    public void incrementViews(Integer numberViews) {
+    public void incrementViews(final Integer numberViews) {
         this.numberViews += numberViews;
     }
+
+    /**
+     * @param numberFavorite
+     */
     // increment the number of favorite
-    public void incrementFavorite(Integer numberFavorite) {
+    public void incrementFavorite(final Integer numberFavorite) {
         this.numberFavorite += numberFavorite;
     }
 
+    /**
+     * @return
+     */
     @Override
     public String toString() {
         return "Video{" +
@@ -121,8 +189,18 @@ public class Video {
                 '}';
     }
 
+    /**
+     * @param obj
+     * @return
+     */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, genres, productionYear, cast, averageRating,
+                            numberViews, numberFavorite, index);
     }
 }

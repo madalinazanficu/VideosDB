@@ -7,7 +7,11 @@ import fileio.ActionInputData;
 import java.util.List;
 
 public class QueriesActor {
-    public static String executeQueryforActors(ActionInputData query) {
+    /**
+     * @param query
+     * @return
+     */
+    public static String executeQueryforActors(final ActionInputData query) {
 
         // 3 types of criteria => average / awards / filter_description
         if (query.getCriteria().equals("average")) {
@@ -23,8 +27,12 @@ public class QueriesActor {
     }
 
 
+    /**
+     * @param query
+     * @return
+     */
     // sortarea celor N actori in functie de nota video-urilor
-    public static String executeQueryAverage(ActionInputData query) {
+    public static String executeQueryAverage(final ActionInputData query) {
         String output = "Query result: [";
 
         List<Actor> nSortedList = ActorsDB.getInstance().sortActorsByAverge(query);
@@ -32,14 +40,19 @@ public class QueriesActor {
         for (i = 0; i < nSortedList.size() - 1; i++) {
             output = output + nSortedList.get(i).getName() + ", ";
         }
-        if (nSortedList.size() != 0)
+        if (nSortedList.size() != 0) {
             output = output + nSortedList.get(i).getName() + "]";
-        else
+        } else {
             output = output + "]";
+        }
         return output;
     }
 
-    public static String executeQueryAwards(ActionInputData query) {
+    /**
+     * @param query
+     * @return
+     */
+    public static String executeQueryAwards(final ActionInputData query) {
         String output = "Query result: [";
 
         List<Actor> filteredActors = ActorsDB.getInstance().sortActorsByAwards(query);
@@ -47,13 +60,19 @@ public class QueriesActor {
         for (i = 0; i < filteredActors.size() - 1; i++) {
             output = output + filteredActors.get(i).getName() + ", ";
         }
-        if (filteredActors.size() != 0)
+        if (filteredActors.size() != 0) {
             output = output + filteredActors.get(i).getName() + "]";
-        else
+        } else {
             output = output + "]";
+        }
         return output;
     }
-    public static String executeQueryFD(ActionInputData query) {
+
+    /**
+     * @param query
+     * @return
+     */
+    public static String executeQueryFD(final ActionInputData query) {
         String output = "Query result: [";
 
         List<Actor> filteredActors = ActorsDB.getInstance().sortActorsByFD(query);
@@ -61,10 +80,11 @@ public class QueriesActor {
         for (i = 0; i < filteredActors.size() - 1; i++) {
             output = output + filteredActors.get(i).getName() + ", ";
         }
-        if (filteredActors.size() != 0)
+        if (filteredActors.size() != 0) {
             output = output + filteredActors.get(i).getName() + "]";
-        else
+        } else {
             output = output + "]";
+        }
 
         return output;
     }

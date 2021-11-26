@@ -2,13 +2,16 @@ package entities;
 
 import java.util.*;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import actor.ActorsAwards;
 import databases.VideosDB;
 import entertainment.Movie;
 import entertainment.Serial;
-import entertainment.Video;
 
-public class Actor {
+
+public final class Actor {
 
     // the name of the actor
     private String name;
@@ -17,7 +20,7 @@ public class Actor {
     private String careerDescription;
 
     // the videos in which the actor played
-    private ArrayList <String> filmography;
+    private ArrayList<String> filmography;
 
     // the award that the actor gained, and their number
     private Map<ActorsAwards, Integer> awards;
@@ -28,7 +31,8 @@ public class Actor {
     // every actor has a total number of awards
     private Integer numberAwards;
 
-    public Actor(String name, String careerDescription, ArrayList<String> filmography, Map<ActorsAwards, Integer> awards) {
+    public Actor(final String name, final String careerDescription,
+                 final ArrayList<String> filmography, final Map<ActorsAwards,Integer> awards) {
         this.name = name;
         this.careerDescription = careerDescription;
         this.filmography = filmography;
@@ -37,7 +41,20 @@ public class Actor {
         this.numberAwards = 0;
     }
 
-    // getters for every attribute
+    // copy-constructor
+    public Actor(Actor assign) {
+        this.name = assign.getName();
+        this.careerDescription = assign.getCareerDescription();
+        this.filmography = assign.getFilmography();
+        this.awards = assign.getAwards();
+        this.averageVideosRating = assign.getAverageVideosRating();
+        this.numberAwards = assign.getNumberAwards();
+
+    }
+
+
+    /*getters for every attribute */
+
     public String getName() {
         return name;
     }
@@ -46,6 +63,7 @@ public class Actor {
         return careerDescription;
     }
 
+    /* */
     public ArrayList<String> getFilmography() {
         return filmography;
     }
@@ -54,15 +72,25 @@ public class Actor {
         return awards;
     }
 
+    /**
+     * @return
+     */
     public Double getAverageVideosRating() {
         computeAverageVideosRating();
         return this.averageVideosRating;
     }
+
+    /**
+     * @return
+     */
     public Integer getNumberAwards() {
         computeNumberAwards();
         return this.numberAwards;
     }
 
+    /**
+     *
+     */
     // compute average Rating of the videos the actor played in
     public void computeAverageVideosRating() {
         int cnt = 0;
@@ -83,33 +111,46 @@ public class Actor {
                     Movie specificMovie = VideosDB.instance.getSpecificMovie(videoName);
                     specificMovie.computeAverageRating();
                     sum += specificMovie.getAverageRating();
-                    if (specificMovie.getAverageRating() != 0)
+                    if (specificMovie.getAverageRating() != 0) {
                         cnt += 1;
+                    }
                 }
                 if (type.equals("Serial")) {
                     Serial specificSerial = VideosDB.instance.getSpecificSerial(videoName);
                     specificSerial.computeAverageRating();
                     sum += specificSerial.getAverageRating();
-                    if (specificSerial.getAverageRating() != 0)
+                    if (specificSerial.getAverageRating() != 0) {
                         cnt += 1;
+                    }
                 }
             }
         }
-        if (cnt != 0)
+        if (cnt != 0) {
             this.averageVideosRating = sum / cnt;
-        else
+        } else {
             this.averageVideosRating = 0.0;
+        }
     }
+
+    /**
+     *
+     */
     public void computeNumberAwards() {
         int nrAwards = 0;
         Iterator<Map.Entry<ActorsAwards, Integer>> iterator = awards.entrySet().iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             Map.Entry<ActorsAwards, Integer> entry = iterator.next();
             nrAwards += entry.getValue();
         }
         this.numberAwards = nrAwards;
     }
-    public Boolean searchWordsRequired(List<String> wordsRequired) {
+
+    /**
+     * @param wordsRequired
+     * @return
+     */
+    public Boolean searchWordsRequired(final List<String> wordsRequired) {
+        int cnt = 0;
 
         // make description all characters lowercase => to make the search case insensitive
         String lCareerDescription = this.getCareerDescription().toLowerCase(Locale.ROOT);
@@ -120,10 +161,14 @@ public class Actor {
             // make every keyWord lowerCse
             String lKeyWord = keyWord.toLowerCase(Locale.ROOT);
 
-            if (!lCareerDescription.contains(lKeyWord)) {
-                return false;
+            Pattern word = Pattern.compile("[ ,!.')-]" + lKeyWord + "[ ,!.'(-]");
+
+            Matcher match = word.matcher(lCareerDescription);
+
+            if (match.find()) {
+                cnt++;
             }
         }
-        return true;
+        return cnt == wordsRequired.size();
     }
 }
