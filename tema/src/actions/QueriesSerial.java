@@ -9,10 +9,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class QueriesSerial {
+public final class QueriesSerial {
+    private QueriesSerial() {
+    }
+
     /**
-     * @param query
-     * @return
+     * Method used for getting the type of criteria type of sorting for series
+     * @param query - input data to extract information
+     * @return the output message
      */
     public static String executeQueryforSerial(final ActionInputData query) {
         // 4 types of criteria for movies => favorite/ ratings / longest/ most_viewd
@@ -37,8 +41,11 @@ public class QueriesSerial {
     }
 
     /**
-     * @param query
-     * @return
+     * Method used for sorting the series by averageRating
+     * Selected the series by specific criteria (year / genres) in VideosDB
+     * Added in sorted series list only the movies with averageRating different with 0
+     * @param query - input data to extract information
+     * @return the list of sorted series
      */
     public static List<Serial> executeQueryRatings(final ActionInputData query) {
         List<Serial> filteredSeries = VideosDB.getInstance().getFilteredSeries(query);
@@ -59,8 +66,11 @@ public class QueriesSerial {
     }
 
     /**
-     * @param query
-     * @return
+     * Method used for sorting the series by the number of likes from users
+     * Selected the movies by specific criteria request from input
+     * Added in sorted series list only the series with numberFavorite ("likes") different with 0
+     * @param query - input data to extract information
+     * @return the list of sorted series
      */
     public static List<Serial> executeQueryFavorite(final ActionInputData query) {
         List<Serial> filteredSeries = VideosDB.getInstance().getFilteredSeries(query);
@@ -80,8 +90,10 @@ public class QueriesSerial {
     }
 
     /**
-     * @param query
-     * @return
+     * Method used for sorting the series depending on their duration
+     * Selected the series by specific criteria requested from input
+     * @param query - input data to extract information
+     * @return the list of sorted series
      */
     public static List<Serial> executeQueryLongest(final ActionInputData query) {
         List<Serial> filteredSeries = VideosDB.getInstance().getFilteredSeries(query);
@@ -95,8 +107,11 @@ public class QueriesSerial {
     }
 
     /**
-     * @param query
-     * @return
+     * Method used for sorting the series depending on the number of views
+     * Selected the series by specific criteria requested in input
+     * Added in sorted series list only the series with number of views different with 0
+     * @param query - input data to extract information
+     * @return the list of sorted series
      */
     public static List<Serial> executeQueryMostViewed(final ActionInputData query) {
         List<Serial> filteredSeries = VideosDB.getInstance().getFilteredSeries(query);
@@ -116,9 +131,10 @@ public class QueriesSerial {
     }
 
     /**
-     * @param sortedList
-     * @param n
-     * @return
+     * Method used for printing the series
+     * @param sortedList - list needed to be printed
+     * @param n - number of elements from the list requested to be printed
+     * @return the output message
      */
     public static String printSortedLists(final List<Serial> sortedList, final int n) {
         String output = "Query result: [";

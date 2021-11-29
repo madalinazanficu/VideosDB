@@ -1,25 +1,24 @@
 package entertainment;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Video {
     // every video has a title
-    private String title;
+    private final String title;
     // every video has more types from Genre enums
-    private ArrayList<String> genres;
+    private final ArrayList<String> genres;
     // every video has a productionYear
-    private Integer productionYear;
+    private final Integer productionYear;
     // every video has a cast of actors
-    private ArrayList<String> cast;
+    private final ArrayList<String> cast;
     // every video has an average rating
-    public Double averageRating;
+    protected Double averageRating;
     // every video has a number of views
-    public Integer numberViews;
+    private Integer numberViews;
     // every video has a number of users that add it at favorite
-    public Integer numberFavorite;
+    private Integer numberFavorite;
     // every video has a index in database
-    public Integer index;
+    private Integer index;
 
     public Video() {
         this.title = null;
@@ -30,30 +29,7 @@ public class Video {
         this.numberViews = 0;
         this.numberFavorite = 0;
     }
-    public Video(final String title, final ArrayList<String> genres, final Integer productionYear,
-                 final ArrayList<String> cast) {
 
-        this.title = title;
-        this.genres = genres;
-        this.productionYear = productionYear;
-        this.cast = cast;
-        this.averageRating = 0.0;
-        this.numberViews = 0;
-        this.numberFavorite = 0;
-    }
-
-    public Video(final String title, final ArrayList<String> genres, final Integer productionYear,
-                 final ArrayList<String> cast, final Double averageRating,
-                 final Integer numberViews, final Integer numberFavorite) {
-
-        this.title = title;
-        this.genres = genres;
-        this.productionYear = productionYear;
-        this.cast = cast;
-        this.averageRating = averageRating;
-        this.numberViews = numberViews;
-        this.numberFavorite = numberFavorite;
-    }
     public Video(final String title, final ArrayList<String> genres, final Integer productionYear,
                  final ArrayList<String> cast, final Double averageRating,
                  final Integer numberViews, final Integer numberFavorite, final Integer index) {
@@ -68,8 +44,7 @@ public class Video {
         this.index = index;
     }
 
-    // Copy Constructor
-    public Video(Video assign) {
+    public Video(final Video assign) {
         this.title = assign.getTitle();
         this.genres = assign.getGenre();
         this.productionYear = assign.getProductionYear();
@@ -78,129 +53,76 @@ public class Video {
         this.numberViews = assign.getNumberViews();
         this.numberFavorite = assign.getNumberFavorite();
         this.index = assign.getIndex();
-
     }
 
-    // getters for every attribute
-
     /**
-     * @return
+     * @return the title of video
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * @return
+     * @return the list of genre of video
      */
     public ArrayList<String> getGenre() {
         return genres;
     }
 
     /**
-     * @return
+     * @return the production year of video
      */
     public Integer getProductionYear() {
         return productionYear;
     }
 
     /**
-     * @return
+     * @return list of actors that played in video
      */
     public ArrayList<String> getCast() {
         return cast;
     }
 
     /**
-     * @return
+     * @return the averageRating of video
      */
     public Double getAverageRating() {
         return this.averageRating;
     }
 
     /**
-     * @return
+     * @return the number of views of video
      */
     public Integer getNumberViews() {
         return this.numberViews;
     }
 
     /**
-     * @return
+     * @return the number of "like" of video
      */
     public Integer getNumberFavorite() {
         return this.numberFavorite;
     }
 
     /**
-     * @return
+     * @return the index from the videos' database for video
      */
     public Integer getIndex() {
         return this.index;
     }
-
     /**
-     * @param title
+     * Method used for incrementing the number of views of video
+     * @param nrViews - the increment size
      */
-    // setters for every attribute
-    public void setTitle(final String title) {
-        this.title = title;
+    public void incrementViews(final Integer nrViews) {
+        this.numberViews += nrViews;
     }
 
     /**
-     * @param genres
+     * Method used for incrementing the number of favorite ("likes") for video
+     * @param nrFavorite - the increment size
      */
-    public void setGenre(final ArrayList<String> genres) {
-        this.genres = genres;
-    }
-
-    /**
-     * @param cast
-     */
-    public void setCast(final ArrayList<String> cast) {
-        this.cast = cast;
-    }
-
-    /**
-     * @param numberViews
-     */
-    // increment the number of views
-    public void incrementViews(final Integer numberViews) {
-        this.numberViews += numberViews;
-    }
-
-    /**
-     * @param numberFavorite
-     */
-    // increment the number of favorite
-    public void incrementFavorite(final Integer numberFavorite) {
-        this.numberFavorite += numberFavorite;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public String toString() {
-        return "Video{" +
-                "title='" + title + '\'' +
-                ", genre=" + genres +
-                ", productionYear=" + productionYear +
-                '}';
-    }
-
-    /**
-     * @param obj
-     * @return
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, genres, productionYear, cast, averageRating,
-                            numberViews, numberFavorite, index);
+    public void incrementFavorite(final Integer nrFavorite) {
+        this.numberFavorite += nrFavorite;
     }
 }

@@ -6,86 +6,78 @@ import fileio.ActionInputData;
 
 import java.util.List;
 
-public class QueriesActor {
+public final class QueriesActor {
+    private QueriesActor() {
+    }
     /**
-     * @param query
-     * @return
+     * Method used for getting the criteria type of sorting for actors
+     * @param query - input data to extract multiple attributes
+     * @return the output message
      */
     public static String executeQueryforActors(final ActionInputData query) {
 
         // 3 types of criteria => average / awards / filter_description
         if (query.getCriteria().equals("average")) {
-            return executeQueryAverage(query);
+            List<Actor> sortedList = executeQueryAverage(query);
+            return printSortedList(sortedList);
         }
         if (query.getCriteria().equals("awards")) {
-            return executeQueryAwards(query);
+            List<Actor> sortedList = executeQueryAwards(query);
+            return printSortedList(sortedList);
         }
         if (query.getCriteria().equals("filter_description")) {
-            return executeQueryFD(query);
+            List<Actor> sortedList = executeQueryFD(query);
+            return printSortedList(sortedList);
         }
         return "Query result: []";
     }
 
-
     /**
-     * @param query
-     * @return
+     * Method used for getting the sorted actors by averageGrade
+     * Sorted the actors by grade in ActorsDB
+     * @param query - input data to extract information
+     * @return the sorted list
      */
-    // sortarea celor N actori in functie de nota video-urilor
-    public static String executeQueryAverage(final ActionInputData query) {
-        String output = "Query result: [";
-
-        List<Actor> nSortedList = ActorsDB.getInstance().sortActorsByAverge(query);
-        int i;
-        for (i = 0; i < nSortedList.size() - 1; i++) {
-            output = output + nSortedList.get(i).getName() + ", ";
-        }
-        if (nSortedList.size() != 0) {
-            output = output + nSortedList.get(i).getName() + "]";
-        } else {
-            output = output + "]";
-        }
-        return output;
+    public static List<Actor> executeQueryAverage(final ActionInputData query) {
+        return ActorsDB.getInstance().sortActorsByAverage(query);
     }
 
     /**
-     * @param query
-     * @return
+     * Method used for getting the sorted actors by awards
+     * Sorted the actors by grade in ActorsDB
+     * @param query - input data to extract information
+     * @return the sorted list
      */
-    public static String executeQueryAwards(final ActionInputData query) {
-        String output = "Query result: [";
-
-        List<Actor> filteredActors = ActorsDB.getInstance().sortActorsByAwards(query);
-        int i;
-        for (i = 0; i < filteredActors.size() - 1; i++) {
-            output = output + filteredActors.get(i).getName() + ", ";
-        }
-        if (filteredActors.size() != 0) {
-            output = output + filteredActors.get(i).getName() + "]";
-        } else {
-            output = output + "]";
-        }
-        return output;
+    public static List<Actor> executeQueryAwards(final ActionInputData query) {
+        return ActorsDB.getInstance().sortActorsByAwards(query);
     }
 
     /**
-     * @param query
-     * @return
+     * Method used for getting the sorted actors by Filter Description
+     * Sorted the actors by Filter Description in ActorsDB
+     * @param query - input data to extract information
+     * @return the sorted list
      */
-    public static String executeQueryFD(final ActionInputData query) {
-        String output = "Query result: [";
+    public static List<Actor> executeQueryFD(final ActionInputData query) {
+        return ActorsDB.getInstance().sortActorsByFD(query);
+    }
 
-        List<Actor> filteredActors = ActorsDB.getInstance().sortActorsByFD(query);
+    /**
+     * Method used for printing a list
+     * @param sortedList - the list needed to be printed
+     * @return the output message
+     */
+    public static String printSortedList(final List<Actor> sortedList) {
+        String output = "Query result: [";
         int i;
-        for (i = 0; i < filteredActors.size() - 1; i++) {
-            output = output + filteredActors.get(i).getName() + ", ";
+        for (i = 0; i < sortedList.size() - 1; i++) {
+            output = output + sortedList.get(i).getName() + ", ";
         }
-        if (filteredActors.size() != 0) {
-            output = output + filteredActors.get(i).getName() + "]";
+        if (sortedList.size() != 0) {
+            output = output + sortedList.get(i).getName() + "]";
         } else {
             output = output + "]";
         }
-
         return output;
     }
 }

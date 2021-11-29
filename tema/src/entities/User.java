@@ -13,30 +13,26 @@ import java.util.Iterator;
 
 
 public final class User {
-    private String username;
+    private final String username;
 
     // the types of subscription are: basic, premium
-    private String subscription;
+    private final String subscription;
 
     // the key is the name of the video, the value represents the number of visualisations
-    private Map<String, Integer> history;
+    private final Map<String, Integer> history;
 
     // user's favorite videos
-    private List<String> favorite;
+    private final List<String> favorite;
 
     // user's number of rating
     private Integer nrRatings;
 
     // movies rated
-    private HashMap<String, Double> ratedMovies;
+    private final HashMap<String, Double> ratedMovies;
 
     // shows rated - contain the serial and a hashmap with seasons and their rating
-    private HashMap<String, HashMap<Integer, Double>> ratedShows;
+    private final HashMap<String, HashMap<Integer, Double>> ratedShows;
 
-    // all videos rated
-    // private HashMap<Video, Integer> ratedVideos;
-
-    // default constructor
     public User() {
         this.username = null;
         this.subscription = null;
@@ -44,9 +40,9 @@ public final class User {
         this.favorite = null;
         this.ratedMovies = null;
         this.ratedShows = null;
-        this.nrRatings = Integer.valueOf(0);
+        this.nrRatings = 0;
     }
-    // copy-constructor
+
     public User(final User copyUser) {
         this.username = copyUser.getUsername();
         this.subscription = copyUser.getSubscription();
@@ -57,8 +53,9 @@ public final class User {
         this.nrRatings = copyUser.getNrRatings();
     }
 
+    public User(final String username, final String subscription, final Map<String,
+                Integer> history, final List<String> favorite) {
 
-    public User(final String username, final String subscription, final Map<String, Integer> history, final List<String> favorite) {
         this.username = username;
         this.subscription = subscription;
         this.history = history;
@@ -67,21 +64,8 @@ public final class User {
         incrementFavoriteUser(favorite);
         this.ratedMovies = new HashMap<String, Double>();
         this.ratedShows = new HashMap<String, HashMap<Integer, Double>>();
-        this.nrRatings = Integer.valueOf(0);
+        this.nrRatings = 0;
     }
-
-    public User(final String username, final String subscription, final Map<String, Integer> history, final List<String> favorite, final Integer nrRatings) {
-        this.username = username;
-        this.subscription = subscription;
-        this.history = history;
-        incrementViewsUser(history);
-        this.favorite = favorite;
-        incrementFavoriteUser(favorite);
-        this.ratedMovies = new HashMap<String, Double>();
-        this.ratedShows = new HashMap<String, HashMap<Integer, Double>>();
-        this.nrRatings = nrRatings;
-    }
-
 
     public String getUsername() {
         return username;
@@ -112,12 +96,13 @@ public final class User {
     }
 
     /**
-     * @param history
+     * Method used for incrementing the number of views for each video seen by the user
+     * It is called in constructor, because user's history could contain videos directly from input
+     * @param userHistory - the history of user
      */
-    // increment the number of views for each video from an user history (given directly from input)
-    public void incrementViewsUser(final Map<String, Integer> history) {
+    public void incrementViewsUser(final Map<String, Integer> userHistory) {
         // iterate in user's history
-        Iterator<Map.Entry<String, Integer>> iterator = history.entrySet().iterator();
+        Iterator<Map.Entry<String, Integer>> iterator = userHistory.entrySet().iterator();
 
         while (iterator.hasNext()) {
             Map.Entry<String, Integer> entry = iterator.next();
@@ -133,13 +118,14 @@ public final class User {
     }
 
     /**
-     * @param favorite
+     * Method used for incrementing the number of favorite for each video saw by the user
+     * It is called in constructor, because user's favoriteList could be given directly from input
+     * @param userFavorite - the favorite list of user
      */
-    // increment the number of likes for each video from an user favorite list (given directly from input)
-    public void incrementFavoriteUser(final List<String> favorite) {
+    public void incrementFavoriteUser(final List<String> userFavorite) {
 
         // iterate in user's favorite list
-        for (String fav : favorite) {
+        for (String fav : userFavorite) {
             Video specificVideo = VideosDB.getInstance().getSpecificVideo(fav);
 
             // for every valid video increment the favorite number of that video
@@ -150,8 +136,9 @@ public final class User {
     }
 
     /**
-     * @param searchFavorite
-     * @return
+     * Method used for searching a specific video in user's favorite list
+     * @param searchFavorite - the specific video title
+     * @return the video title if it is found or null otherwise
      */
     public String getFavoriteByName(final String searchFavorite) {
         for (String fav : favorite) {
@@ -163,8 +150,10 @@ public final class User {
     }
 
     /**
-     * @param newFavoriteVideo
-     * @return
+     * Method used for adding a new favorite movie in user's favorite list
+     * It is called in Commands/favoriteCommand
+     * @param newFavoriteVideo - the new favorite movie needed to be added
+     * @return the output message - if the video is seen/ is already in favorite list/ was added
      */
     public String addNewFavoriteVideo(final String newFavoriteVideo) {
         String output;
@@ -178,7 +167,7 @@ public final class User {
                 output = "error -> " + newFavoriteVideo + " is already in favourite list";
                 return output;
         }
-        // otherwise => add it Favorite list
+        // otherwise, add it Favorite list
         this.favorite.add(newFavoriteVideo);
         output = "success -> " + newFavoriteVideo + " was added as favourite";
 
@@ -191,12 +180,14 @@ public final class User {
     }
 
     /**
-     * @param newHistoryVideo
-     * @return
+     * Method used for adding a new video is user's history
+     * It is used in Commands/viewCommand
+     * @param newHistoryVideo - the video needed to be added
+     * @return the output message
      */
     public String addToHistory(final String newHistoryVideo) {
+
         // search in history the newHistoryVideo
-        // not found
         if (this.history.get(newHistoryVideo) == null) {
             this.history.put(newHistoryVideo, 1);
             Video specificVideo = VideosDB.getInstance().getSpecificVideo(newHistoryVideo);
@@ -217,9 +208,10 @@ public final class User {
     }
 
     /**
-     * @param specificMovie
-     * @param rating
-     * @return
+     * Method used for rating a specific movie and adding the movie to rated movies map of user
+     * @param specificMovie - the specific movie needed to be rated and added to the map
+     * @param rating - the rating offered by the current user
+     * @return the output message
      */
     public String rateMovie(final Movie specificMovie, final Double rating) {
 
@@ -243,27 +235,32 @@ public final class User {
     }
 
     /**
-     * @param specificSerial
-     * @param rating
-     * @param seasonNumber
-     * @return
+     * Method used for rating a specific serial and adding the serial to rated series map of user
+     * The rating of the serial is done on seasons
+     * @param specificSerial - the specific serial needed to be rated
+     * @param rating - the rating offered by the current user
+     * @param seasonNumber - the season number needed to be rated from the serial
+     * @return the output message
      */
-    public String rateSerial(final Serial specificSerial, final Double rating, final Integer seasonNumber) {
+    public String rateSerial(final Serial specificSerial, final Double rating,
+                             final Integer seasonNumber) {
 
         // First case => the serial has not been seen by the user => no rating allowed
         if (this.history.get(specificSerial.getTitle()) == null) {
             return "error -> " + specificSerial.getTitle() + " is not seen";
         }
 
-        // Second case => the specificSerial has not been rated or seasonNumber has not been already rated
-        if (this.ratedShows.get(specificSerial.getTitle()) == null || this.ratedShows.get(specificSerial.getTitle()).get(seasonNumber) == null) {
-            // Serialul nu a primit niciun rating pana acum => noua intrare in hasmap
+        // The specificSerial has not been rated or seasonNumber has not been already rated
+        if (this.ratedShows.get(specificSerial.getTitle()) == null
+                || this.ratedShows.get(specificSerial.getTitle()).get(seasonNumber) == null) {
+
+            // The specific serial has not been already rated => new hashmap entry
             HashMap<Integer, Double> entry;
             if (this.ratedShows.get(specificSerial.getTitle()) == null) {
                 entry = new HashMap<>();
                 entry.put(seasonNumber, rating);
             } else {
-                // Serialul a mai primit rating, dar sezonul curent nu
+                // The specific serial has already been rated, but the specific season no
                 entry = this.ratedShows.get(specificSerial.getTitle());
                 entry.put(seasonNumber, rating);
             }
@@ -271,8 +268,10 @@ public final class User {
             this.ratedShows.put(specificSerial.getTitle(), entry);
             this.nrRatings++;
 
-            // RATE THE SEASON => every serial has a list of sesons, every season has a list of ratings
-            List<Double> ratings = specificSerial.getAllSeasons().get(seasonNumber - 1).getRatings();
+            // rete the season => every serial has a list of seasons
+            // every season has a list of ratings
+            List<Double> ratings = specificSerial.getAllSeasons()
+                                  .get(seasonNumber - 1).getRatings();
             ratings.add(rating);
             specificSerial.getAllSeasons().get(seasonNumber - 1).setRatings(ratings);
 

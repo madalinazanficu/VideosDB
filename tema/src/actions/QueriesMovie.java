@@ -9,11 +9,14 @@ import java.util.List;
 import java.util.Comparator;
 import java.util.Collections;
 
-public class QueriesMovie {
+public final class QueriesMovie {
+    private QueriesMovie() {
+    }
 
     /**
-     * @param query s
-     * @return
+     * Method used for geting the criteria type of sorting for movie
+     * @param query - input data to extract multiple attributes
+     * @return the output message
      */
     public static String executeQueryforMovie(final ActionInputData query) {
         // 4 types of criteria for movies => favorite/ ratings / longest/ most_viewd
@@ -36,20 +39,17 @@ public class QueriesMovie {
         return "Query result: []";
     }
 
-    /**
-     * @param query
-     * @return
+    /** Method used for sorting the movies by averageRating
+     * Filtered the movies by specific criteria (year / genres) in VideosDB
+     * Added in sorted movies list only the movies with averageRating different with 0
+     * @param query - input data to extract information
+     * @return the list of sorted movies
      */
-    //  sort the movies by rating
-    //     filter the movies by specific criteria in .getFilteredMovie is implemented in VideosDB
-    //     add in the sortedMovies only the movies with averageRating different with 0
-     //    sort with Collection sort
     public static List<Movie> executeQueryRatings(final ActionInputData query) {
         List<Movie> filteredMovies = VideosDB.getInstance().getFilteredMovies(query);
         List<Movie> sortedMovies = new ArrayList<>();
 
         for (Movie movie : filteredMovies) {
-            // movie.computeAverageRating();
             if (movie.getAverageRating() != 0) {
                 sortedMovies.add(new Movie(movie));
             }
@@ -63,14 +63,13 @@ public class QueriesMovie {
         return sortedMovies;
     }
 
-    /**
-     * @param query
-     * @return
+    /** Method used for sorting the movies by the number of likes from users
+     * Filtered the movies by specific criteria in VideoDB
+     * Added in sorted movies list only the movies with numberFavorite ("likes") different with 0
+     * @param query - input data to extract information
+     * @return the list of sorted movies
      */
-//      sort the movies by the number of likes from user
-//         filter the movies by specific criteria in .getFilteredMovie is implemented in VideosDB
-//         add in the sortedMovies only the movies with the number of Favorite (likes) different with 0
-//         sort with Collection sort
+
     public static List<Movie> executeQueryFavorite(final ActionInputData query) {
         List<Movie> filteredMovies = VideosDB.getInstance().getFilteredMovies(query);
         List<Movie> sortedMovies = new ArrayList<>();
@@ -89,12 +88,11 @@ public class QueriesMovie {
     }
 
     /**
-     * @param query
-     * @return
+     * Method used for sorting the movies depending on their duration
+     * Selected the movies by specific criteria requested in input
+     * @param query - input data to extract information
+     * @return the list of sorted movies
      */
-//      sort the movies depending of their duration
-//         filter the movies by specific criteria in .getFilteredMovie is implemented in VideosDB
-//         sort with Collection sort
     public static List<Movie> executeQueryLongest(final ActionInputData query) {
         List<Movie> filteredMovies = VideosDB.getInstance().getFilteredMovies(query);
 
@@ -108,13 +106,13 @@ public class QueriesMovie {
 
 
     /**
-     * @param query
-     * @return
+     * Method used for sorting the movies depending on the number of views
+     * Selected the movies by specific criteria requested in input
+     * Added in sorted movies list only the movies with number of views different with 0
+     * @param query - input data to extract information
+     * @return the list of sorted movies
      */
-//       sort the movies depending the most_viewd field
-//         filter the movies by specific criteria in .getFilteredMovie is implemented in VideosDB
-//         add in the sortedMovies only the movies with the number of views different with 0
-//         sort with Collection
+
     public static List<Movie> executeQueryMostViewed(final ActionInputData query) {
         List<Movie> filteredMovies = VideosDB.getInstance().getFilteredMovies(query);
         List<Movie> sortedMovies = new ArrayList<>();
@@ -133,9 +131,10 @@ public class QueriesMovie {
     }
 
     /**
-     * @param sortedList
-     * @param n
-     * @return
+     * Method used for printing the movies
+     * @param sortedList - list needed to be printed
+     * @param n - number of elements from the list requested to be printed
+     * @return the output message
      */
     public static String printSortedLists(final List<Movie> sortedList, final int n) {
         String output = "Query result: [";

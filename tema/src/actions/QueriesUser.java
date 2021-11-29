@@ -9,10 +9,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class QueriesUser {
+public final class QueriesUser {
+    private QueriesUser() { }
     /**
-     * @param query
-     * @return
+     * Method used for getting the criteria type of sorting for user
+     * @param query - input data to extract information
+     * @return the output message
      */
     public static String executeQueryforUser(final ActionInputData query) {
         if (query.getCriteria().equals("num_ratings")) {
@@ -23,8 +25,10 @@ public class QueriesUser {
     }
 
     /**
-     * @param query
-     * @return
+     * Method used for sorting the users by the number of rating given
+     * Added in sorted users list only the users with nr rating different with 0
+     * @param query - input data to extract information
+     * @return the list of sorted users
      */
     public static List<User> executeQueryNrRatings(final ActionInputData query) {
         List<User> users = UsersDB.getInstance().getAllUsers();
@@ -44,9 +48,10 @@ public class QueriesUser {
     }
 
     /**
-     * @param sortedList
-     * @param n
-     * @return
+     * Method used for printing the users
+     * @param sortedList - list needed to be printed
+     * @param n - number of elements from the list requested to be printed
+     * @return the output message
      */
     public static String printSortedLists(final List<User> sortedList, final int n) {
         String output = "Query result: [";

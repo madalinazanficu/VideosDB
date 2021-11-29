@@ -6,48 +6,27 @@ import java.util.List;
 public final class Serial extends Video {
 
     // number of seasons
-    private Integer numberofSeasons;
+    private final Integer numberofSeasons;
 
     // the list of seasons
-    private List<Season> allSeasons;
+    private final List<Season> allSeasons;
 
-    // total Duration of a serial
+    // total duration of serial
     private Integer duration;
 
-
-    public Serial(final String title, final ArrayList<String> genres, final Integer productionYear,
-                  final List<Season> allSeasons, final Integer numberofSeasons,
-                  final ArrayList<String> cast) {
-
-        super(title, genres, productionYear, cast);
-        this.allSeasons = allSeasons;
-        this.numberofSeasons = numberofSeasons;
-        computeDuration();
-    }
-
-    public Serial(final String title, final ArrayList<String> genres, final Integer productionYear,
-                  final List<Season> allSeasons, final Integer numberofSeasons,
-                  final ArrayList<String> cast, final Double averageRating,
-                  final Integer numberViews, final Integer numberFavorite) {
-
-        super(title, genres, productionYear, cast, averageRating, numberViews, numberFavorite);
-        this.allSeasons = allSeasons;
-        this.numberofSeasons = numberofSeasons;
-        computeDuration();
-    }
     public Serial(final String title, final ArrayList<String> genres, final Integer productionYear,
                   final List<Season> allSeasons, final Integer numberofSeasons,
                   final ArrayList<String> cast, final Double averageRating,
                   final Integer numberViews, final Integer numberFavorite, final Integer index) {
 
-        super(title, genres, productionYear, cast, averageRating, numberViews, numberFavorite, index);
+        super(title, genres, productionYear, cast, averageRating,
+                numberViews, numberFavorite, index);
         this.allSeasons = allSeasons;
         this.numberofSeasons = numberofSeasons;
         computeDuration();
     }
 
-    // copy-constructor
-    public Serial(Serial assign) {
+    public Serial(final Serial assign) {
         super(assign.getTitle(), assign.getGenre(), assign.getProductionYear(), assign.getCast(),
                 assign.getAverageRating(), assign.getNumberViews(),
                 assign.getNumberFavorite(), assign.getIndex());
@@ -73,7 +52,9 @@ public final class Serial extends Video {
     }
 
     /**
-     *
+     * Method used for computing the average rating of a serial
+     * The algorithm consist in iterating in list of season of the serial
+     * Than iterating in the list of rating for every season and make the average
      */
     public void computeAverageRating() {
         Double totalSum = 0.0;
@@ -99,14 +80,14 @@ public final class Serial extends Video {
     }
 
     /**
-     *
+     * Method used for computing the total duration of a serial
      */
     public void computeDuration() {
-        Integer duration = 0;
+        Integer timer = 0;
         for (Season season : allSeasons) {
-            duration += season.getDuration();
+            timer += season.getDuration();
         }
-        this.duration = duration;
+        this.duration = timer;
     }
 
 }
