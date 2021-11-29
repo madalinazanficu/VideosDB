@@ -5,17 +5,17 @@ import fileio.Input;
 import fileio.UserInputData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-// maintain a Singleton Database for each type of input: in this case users
-public class UsersDB {
+public final class UsersDB {
 
-    // list of users
-    private List<User> allUsers;
-    public static UsersDB instance = null;
+    private final List<User> allUsers;
+    private static UsersDB instance = null;
 
+    /**
+     * Method used for creating and to getting the instance of Database (Singleton pattern)
+     * @return the instance of Users' Database
+     */
     public static UsersDB getInstance() {
         if (instance == null) {
             instance = new UsersDB();
@@ -25,23 +25,31 @@ public class UsersDB {
     public List<User> getAllUsers() {
         return this.allUsers;
     }
-
-
-    // constructor
     private UsersDB() {
         this.allUsers = new ArrayList<User>();
     }
 
-    // bring information for users from input
-    public void setUsersDB(Input input) {
+    /**
+     * Method used for bringing the information from input to database
+     * @param input - input information to set the list of users
+     */
+    public void setUsersDB(final Input input) {
         // iterate through the list of users from input and add it to my own database
         for (UserInputData inputUser : input.getUsers()) {
-            User newUser = new User(inputUser.getUsername(), inputUser.getSubscriptionType(), inputUser.getHistory(), inputUser.getFavoriteMovies());
+            User newUser = new User(inputUser.getUsername(), inputUser.getSubscriptionType(),
+                                    inputUser.getHistory(), inputUser.getFavoriteMovies());
             this.allUsers.add(newUser);
         }
     }
+
+    /**
+     * Method used for getting a User entity from users' database
+     * Used in Commands and not only
+     * @param username - the requested information for searching the user
+     * @return the user or null in case username is not assign with any user
+     */
     // used in Commands to get a user by username
-    public User getSpecificUser(String username) {
+    public User getSpecificUser(final String username) {
        for (User user : allUsers) {
            if (user.getUsername().equals(username)) {
                return user;
@@ -50,8 +58,12 @@ public class UsersDB {
        // user not found
        return null;
     }
+
+    /**
+     *  Method used to clear the information from users' database
+     *  Helped to reuse safely the database
+     */
     public void clearUsersDB() {
-        instance = null;
         this.allUsers.clear();
     }
 }

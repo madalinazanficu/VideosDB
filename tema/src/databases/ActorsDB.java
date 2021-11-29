@@ -1,20 +1,28 @@
 package databases;
 
-import actions.Commands;
 import actor.ActorsAwards;
 import entities.Actor;
 import fileio.ActionInputData;
 import fileio.ActorInputData;
 import fileio.Input;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 
-// maintain a Singleton Database for each type of input: in this case actors
-public class ActorsDB {
-    // list of actors
+import static common.Constants.AWARDS_FILTER;
+
+
+public final class ActorsDB {
+
     private final List<Actor> allActors;
-    public static ActorsDB instance = null;
+    private static ActorsDB instance = null;
 
+    /**
+     * Method used for creating or to getting the instance of Database (Singleton pattern)
+     * @return the instance of Actors' Database
+     */
     public static ActorsDB getInstance() {
         if (instance == null) {
             instance = new ActorsDB();
@@ -22,16 +30,19 @@ public class ActorsDB {
         return instance;
     }
 
-    // construct the list of actors
-    private ActorsDB (){
+    private ActorsDB() {
         this.allActors = new ArrayList<Actor>();
     }
 
-    // bring information for actors from input
-    public void SetActorsDB (Input input) {
+    /**
+     * Method used for bringing the information from input to database
+     * @param input - input information to set the list of actors
+     */
+    public void setActorsDB(final Input input) {
         for (ActorInputData inputActor : input.getActors()) {
             // iterate through the list of actors from input and add it to my own database
-            Actor newActor = new Actor(inputActor.getName(), inputActor.getCareerDescription(), inputActor.getFilmography(), inputActor.getAwards());
+            Actor newActor = new Actor(inputActor.getName(), inputActor.getCareerDescription(),
+                                        inputActor.getFilmography(), inputActor.getAwards());
             this.allActors.add(newActor);
         }
     }
@@ -40,37 +51,52 @@ public class ActorsDB {
         return allActors;
     }
 
-    public List<Actor> sortActorsByAverge(ActionInputData action) {
+    /**
+     * Method used for sorting the actors by averageGrade of the videos they played in
+     * This method is called in QueriesActor/executeQueryAverage
+     * @param query - input information
+     * @return the list of sorted actors
+     */
+    public List<Actor> sortActorsByAverage(final ActionInputData query) {
         List<Actor> sortedList = new ArrayList<>();
         List<Actor> nSortedList = new ArrayList<>();
 
         for (Actor actor : this.allActors) {
-            sortedList.add(new Actor(actor.getName(), actor.getCareerDescription(), actor.getFilmography(), actor.getAwards()));
+            sortedList.add(new Actor(actor.getName(), actor.getCareerDescription(),
+                            actor.getFilmography(), actor.getAwards()));
         }
-        Collections.sort(sortedList, Comparator.comparing(Actor::getAverageVideosRating).thenComparing(Actor::getName));
+        Collections.sort(sortedList, Comparator.comparing(Actor::getAverageVideosRating)
+                        .thenComparing(Actor::getName));
 
-        if (action.getSortType().equals("desc")) {
+        if (query.getSortType().equals("desc")) {
             Collections.reverse(sortedList);
         }
-        Integer n = action.getNumber();
+        int n = query.getNumber();
         for (Actor actor : sortedList) {
             if (actor.getAverageVideosRating() != 0 && n > 0) {
-                nSortedList.add(new Actor(actor.getName(), actor.getCareerDescription(), actor.getFilmography(), actor.getAwards()));
+                nSortedList.add(new Actor(actor));
                 n--;
             }
         }
         return nSortedList;
     }
-    public List <Actor> sortActorsByAwards(ActionInputData query) {
-        // extract the list of awards required
-        List <String> awardsRequired = query.getFilters().get(3);
 
-        // the filterd actors by awards
-        List <Actor> filterdActors = new ArrayList<>();
+    /**
+     * Method used for sorting the actors by numberAwards
+     * This method is called in QueriesActor/executeQueryAwards
+     * @param query - input information
+     * @return the list of sorted actors
+     */
+    public List<Actor> sortActorsByAwards(final ActionInputData query) {
+        // extract the list of awards required
+
+        List<String> awardsRequired = query.getFilters().get(AWARDS_FILTER);
+
+        // the filtered actors by awards
+        List<Actor> filteredActors = new ArrayList<>();
 
         // iterate in all actors
        for (Actor actor : this.allActors) {
-
            // iterate in awards required
            Boolean exist = true;
            for (String award : awardsRequired) {
@@ -80,33 +106,38 @@ public class ActorsDB {
                }
            }
            if (exist) {
-               Actor copyActor = new Actor(actor.getName(), actor.getCareerDescription(), actor.getFilmography(), actor.getAwards());
+               Actor copyActor = new Actor(actor);
                copyActor.computeNumberAwards();
-               filterdActors.add(copyActor);
+               filteredActors.add(copyActor);
            }
-
        }
-       Collections.sort(filterdActors, Comparator.comparing(Actor::getNumberAwards).thenComparing(Actor::getName));
+       Collections.sort(filteredActors, Comparator.comparing(Actor::getNumberAwards)
+                        .thenComparing(Actor::getName));
        if (query.getSortType().equals("desc")) {
-           Collections.reverse(filterdActors);
+           Collections.reverse(filteredActors);
        }
-       return filterdActors;
+       return filteredActors;
     }
 
-    public List <Actor> sortActorsByFD(ActionInputData query) {
+    /**
+     * Method used for sorting the actors by Filter Description
+     * This method is called in QueriesActor/executeQueryAwards
+     * @param query - input information
+     * @return the list of sorted actors
+     */
+    public List<Actor> sortActorsByFD(final ActionInputData query) {
         // extract the list of words required
         List<String> wordsRequired = query.getFilters().get(2);
 
         // the filtered actors by words
-        List <Actor> filteredActors = new ArrayList<>();
+        List<Actor> filteredActors = new ArrayList<>();
 
         // iterate in all actors
         for (Actor actor : this.allActors) {
-
             // check the words required
             Boolean exist = actor.searchWordsRequired(wordsRequired);
             if (exist) {
-                Actor copyActor = new Actor(actor.getName(), actor.getCareerDescription(), actor.getFilmography(), actor.getAwards());
+                Actor copyActor = new Actor(actor);
                 filteredActors.add(copyActor);
             }
         }
@@ -118,11 +149,12 @@ public class ActorsDB {
         return filteredActors;
     }
 
-
+    /**
+     * Method used to clear the information from actors' database
+     * Helped to reuse safely the database
+     */
     public void clearActorDB() {
-        instance = null;
         allActors.clear();
-
     }
 
 }

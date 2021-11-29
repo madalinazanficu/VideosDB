@@ -9,7 +9,6 @@ import common.Constants;
 import databases.ActorsDB;
 import databases.UsersDB;
 import databases.VideosDB;
-import entities.Actor;
 import fileio.ActionInputData;
 import fileio.Input;
 import fileio.InputLoader;
@@ -24,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+
 
 /**
  * The entry point to this homework. It runs the checker that tests your implentation.
@@ -82,58 +82,49 @@ public final class Main {
 
         //TODO add here the entry point to your implementation
 
-
-        // keep the input information in databases for every objectType
+        // clear the databases
         UsersDB.getInstance().clearUsersDB();
         ActorsDB.getInstance().clearActorDB();
         VideosDB.getInstance().clearVideosDB();
 
+        // keep the input information in databases for every objectType
         UsersDB users = UsersDB.getInstance();
         ActorsDB actors = ActorsDB.getInstance();
         VideosDB videos = VideosDB.getInstance();
 
-        // the list of videos will be updated as well
         VideosDB.getInstance().setAllMovies(input);
         VideosDB.getInstance().setAllShows(input);
 
-        // to set my databases information
+        // to set databases information
         UsersDB.getInstance().setUsersDB(input);
-        ActorsDB.getInstance().SetActorsDB(input);
+        ActorsDB.getInstance().setActorsDB(input);
 
         // actions required
         List<ActionInputData> actions = input.getCommands();
 
         for (ActionInputData action : actions) {
-            // getActionType => command / reccomandations / query
+            // getActionType => command / recommendations / query
 
             if (action.getActionType().equals("command")) {
-                // getType => favorite/ view / rating
                 // used Command class to make different commands
-
-                Commands commands = new Commands();
-                String outputMessage = commands.executeCommand(action);
+                Commands command = new Commands(action);
+                String outputMessage = command.executeCommand();
                 JSONObject result = fileWriter.writeFile(action.getActionId(), "", outputMessage);
                 arrayResult.add(result);
-
             }
             if (action.getActionType().equals("recommendation")) {
-                // getType => standard, best_unseen, search, favorite, popular
-                // used Reccommandation class to make different reccomandations
-                Recommendation recommendation = new Recommendation();
-                String outputMessage = recommendation.executeRecommendation(action);
+                // used Recommendation class to make different recommendations
+                Recommendation recommendation = new Recommendation(action);
+                String outputMessage = recommendation.executeRecommendation();
                 JSONObject result = fileWriter.writeFile(action.getActionId(), "", outputMessage);
                 arrayResult.add(result);
-
             }
             if (action.getActionType().equals("query")) {
-                // getObjectType => object to apply criteria
-                // getCritestia => apply specified criteria
-                // used Query class to make manipulate queries
-                Queries query = new Queries();
-                String outputMessage = query.executeQuery(action);
+                // used Query class to manipulate queries
+                Queries query = new Queries(action);
+                String outputMessage = query.executeQuery();
                 JSONObject result = fileWriter.writeFile(action.getActionId(), "", outputMessage);
                 arrayResult.add(result);
-
             }
         }
 

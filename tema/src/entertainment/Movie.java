@@ -3,46 +3,41 @@ package entertainment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Movie extends Video {
-    // how longest a movie is
-    private Integer duration;
+public final class Movie extends Video {
+    private final Integer duration;
 
     // list of rating from all users
-    private List<Double> ratings;
+    private final List<Double> ratings;
 
-    public Movie(String title, ArrayList<String> genres, Integer productionYear, Integer duration, ArrayList<String> cast) {
-        super(title, genres, productionYear, cast);
+
+    public Movie(final String title, final ArrayList<String> genres, final Integer productionYear,
+                 final Integer duration, final ArrayList<String> cast, final Double averageRating,
+                 final Integer numberViews, final Integer numberFavorite, final Integer index) {
+
+        super(title, genres, productionYear, cast, averageRating,
+                numberViews, numberFavorite, index);
         this.duration = duration;
         this.ratings = new ArrayList<Double>();
     }
 
-    public Movie(String title, ArrayList<String> genres, Integer productionYear, Integer duration, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite) {
-        super(title, genres, productionYear, cast, averageRating, numberViews, numberFavorite);
-        this.duration = duration;
-        this.ratings = new ArrayList<Double>();
-    }
+    public Movie(final Movie assign) {
+        super(assign.getTitle(), assign.getGenre(), assign.getProductionYear(), assign.getCast(),
+                assign.getAverageRating(), assign.getNumberViews(),
+                assign.getNumberFavorite(), assign.getIndex());
 
-    public Movie(String title, ArrayList<String> genres, Integer productionYear, Integer duration, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite, Integer index) {
-        super(title, genres, productionYear, cast, averageRating, numberViews, numberFavorite, index);
-        this.duration = duration;
-        this.ratings = new ArrayList<Double>();
-    }
-
-    // copy-constructor
-    public Movie(Movie assign) {
-        super(assign.getTitle(), assign.getGenre(), assign.getProductionYear(), assign.getCast(), assign.getAverageRating(), assign.getNumberViews(), assign.getNumberFavorite());
         this.duration = assign.getDuration();
         this.ratings = new ArrayList<>();
-
     }
 
-    // getters for all atributes
     public Integer getTime() {
         return this.duration;
     }
 
-    // add rating from a user
-    public void addRating(Double rating) {
+    /**
+     * Method used for adding a new rating from a user in the ratings list
+     * @param rating - the value needed to be added
+     */
+    public void addRating(final Double rating) {
         this.ratings.add(rating);
     }
 
@@ -50,9 +45,14 @@ public class Movie extends Video {
         return duration;
     }
 
-    public Double getAverageRating() {return averageRating;}
+    public Double getAverageRating() {
+        return averageRating;
+    }
 
-    // compute the average rating
+    /**
+     * Method used for computing the average rating of a movie
+     * Iterate in the list of ratings and compute the average
+     */
     public void computeAverageRating() {
         Double sum = 0.0;
         int num = 0;
@@ -60,10 +60,11 @@ public class Movie extends Video {
             sum += rating;
             num += 1;
         }
-        if (num != 0)
+        if (num != 0) {
             this.averageRating = sum / num;
-        else
+        } else {
             this.averageRating = 0.0;
+        }
     }
 
 }

@@ -4,21 +4,21 @@ import java.util.ArrayList;
 
 public class Video {
     // every video has a title
-    private String title;
+    private final String title;
     // every video has more types from Genre enums
-    private ArrayList<String> genres;
+    private final ArrayList<String> genres;
     // every video has a productionYear
-    private Integer productionYear;
+    private final Integer productionYear;
     // every video has a cast of actors
-    private ArrayList<String> cast;
+    private final ArrayList<String> cast;
     // every video has an average rating
-    public Double averageRating;
+    protected Double averageRating;
     // every video has a number of views
-    public Integer numberViews;
+    private Integer numberViews;
     // every video has a number of users that add it at favorite
-    public Integer numberFavorite;
+    private Integer numberFavorite;
     // every video has a index in database
-    public Integer index;
+    private Integer index;
 
     public Video() {
         this.title = null;
@@ -29,26 +29,11 @@ public class Video {
         this.numberViews = 0;
         this.numberFavorite = 0;
     }
-    public Video(String title, ArrayList<String> genres, Integer productionYear, ArrayList<String> cast) {
-        this.title = title;
-        this.genres = genres;
-        this.productionYear = productionYear;
-        this.cast = cast;
-        this.averageRating = 0.0;
-        this.numberViews = 0;
-        this.numberFavorite = 0;
-    }
 
-    public Video(String title, ArrayList<String> genres, Integer productionYear, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite) {
-        this.title = title;
-        this.genres = genres;
-        this.productionYear = productionYear;
-        this.cast = cast;
-        this.averageRating = averageRating;
-        this.numberViews = numberViews;
-        this.numberFavorite = numberFavorite;
-    }
-    public Video(String title, ArrayList<String> genres, Integer productionYear, ArrayList<String> cast, Double averageRating, Integer numberViews, Integer numberFavorite, Integer index) {
+    public Video(final String title, final ArrayList<String> genres, final Integer productionYear,
+                 final ArrayList<String> cast, final Double averageRating,
+                 final Integer numberViews, final Integer numberFavorite, final Integer index) {
+
         this.title = title;
         this.genres = genres;
         this.productionYear = productionYear;
@@ -59,70 +44,85 @@ public class Video {
         this.index = index;
     }
 
-    // getters for every attribute
+    public Video(final Video assign) {
+        this.title = assign.getTitle();
+        this.genres = assign.getGenre();
+        this.productionYear = assign.getProductionYear();
+        this.cast = assign.getCast();
+        this.averageRating = assign.getAverageRating();
+        this.numberViews = assign.getNumberViews();
+        this.numberFavorite = assign.getNumberFavorite();
+        this.index = assign.getIndex();
+    }
+
+    /**
+     * @return the title of video
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * @return the list of genre of video
+     */
     public ArrayList<String> getGenre() {
         return genres;
     }
 
+    /**
+     * @return the production year of video
+     */
     public Integer getProductionYear() {
         return productionYear;
     }
 
+    /**
+     * @return list of actors that played in video
+     */
     public ArrayList<String> getCast() {
         return cast;
     }
 
+    /**
+     * @return the averageRating of video
+     */
     public Double getAverageRating() {
         return this.averageRating;
     }
 
-    public Integer getNumberViews() {return this.numberViews;}
-
-    public Integer getNumberFavorite() {return this.numberFavorite;}
-
-    public Integer getIndex() {return this.index;}
-
-    // setters for every attribute
-    public void setTitle(String title) {
-        this.title = title;
+    /**
+     * @return the number of views of video
+     */
+    public Integer getNumberViews() {
+        return this.numberViews;
     }
 
-    public void setGenre(ArrayList<String> genres) {
-        this.genres = genres;
+    /**
+     * @return the number of "like" of video
+     */
+    public Integer getNumberFavorite() {
+        return this.numberFavorite;
     }
 
-    public void setProductionYear(Integer productionYear) {
-        this.productionYear = productionYear;
+    /**
+     * @return the index from the videos' database for video
+     */
+    public Integer getIndex() {
+        return this.index;
+    }
+    /**
+     * Method used for incrementing the number of views of video
+     * @param nrViews - the increment size
+     */
+    public void incrementViews(final Integer nrViews) {
+        this.numberViews += nrViews;
     }
 
-    public void setCast(ArrayList<String> cast) {
-        this.cast = cast;
-    }
-
-    // increment the number of views
-    public void incrementViews(Integer numberViews) {
-        this.numberViews += numberViews;
-    }
-    // increment the number of favorite
-    public void incrementFavorite(Integer numberFavorite) {
-        this.numberFavorite += numberFavorite;
-    }
-
-    @Override
-    public String toString() {
-        return "Video{" +
-                "title='" + title + '\'' +
-                ", genre=" + genres +
-                ", productionYear=" + productionYear +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    /**
+     * Method used for incrementing the number of favorite ("likes") for video
+     * @param nrFavorite - the increment size
+     */
+    public void incrementFavorite(final Integer nrFavorite) {
+        this.numberFavorite += nrFavorite;
     }
 }
